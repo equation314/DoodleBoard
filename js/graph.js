@@ -12,6 +12,10 @@ function Graph(document) {
     return [x - this.offsetX, y - this.offsetY];
   }
 
+  this.inCanvas = (x, y) => {
+    return 0 <= x && x <= this.width && 0 <= y && y <= this.height;
+  }
+
   /*this.setPixel = (x, y, r = currentColor[0],
                            g = currentColor[1],
                            b = currentColor[2],
@@ -29,6 +33,7 @@ function Graph(document) {
                          g = currentColor[1],
                          b = currentColor[2],
                          a = currentColor[3]) => {
+    if (!this.inCanvas(x, y)) return;
     ctx.fillStyle = `rgba(${r},${g},${b},${a / 255.0})`;
     ctx.fillRect(x, y, 1, 1);
   }
@@ -38,6 +43,7 @@ function Graph(document) {
                               g = currentColor[1],
                               b = currentColor[2],
                               a = currentColor[3]) => {
+    if (!this.inCanvas(x, y)) return;
     let i = (y * this.width + x) * 4;
     data[i] = r;
     data[i+1] = g;
@@ -92,6 +98,27 @@ function Graph(document) {
     }
   }
 
+  function __drawCircle(x, y, r, setPixel) {
+    function drawCirclePoints(dx, dy) {
+      setPixel(x + dx, y + dy); setPixel(x + dy, y + dx);
+      setPixel(x - dx, y + dy); setPixel(x + dy, y - dx);
+      setPixel(x + dx, y - dy); setPixel(x - dy, y + dx);
+      setPixel(x - dx, y - dy); setPixel(x - dy, y - dx);
+    }
+
+    let dx = 0, dy = r, d= 10 - r * 8;
+    while (dx <= dy) {
+      drawCirclePoints(dx, dy);
+      if (d < 0)
+        d += 16 * dx + 24;
+      else {
+        d += 16 * (dx - dy) + 40;
+        dy--;
+      }
+      dx++;
+    }
+  }
+
   this.drawLine = (x1, y1, x2, y2) => {
     __drawLine(x1, y1, x2, y2, this.setPixel);
     this.createCache();
@@ -100,6 +127,19 @@ function Graph(document) {
   this.drawLineOnCache = (x1, y1, x2, y2) => {
     let cache = ctx.getImageData(0, 0, this.width, this.height);
     __drawLine(x1, y1, x2, y2, (x, y) => {
+      this.setImagePixel(cache.data, x, y);
+    });
+    ctx.putImageData(cache, 0, 0);
+  }
+
+  this.drawCircle = (x, y, r) => {
+    __drawCircle(x, y, r, this.setPixel);
+    this.createCache();
+  }
+
+  this.drawCircleOnCache = (x, y, r) => {
+    let cache = ctx.getImageData(0, 0, this.width, this.height);
+    __drawCircle(x, y, r, (x, y) => {
       this.setImagePixel(cache.data, x, y);
     });
     ctx.putImageData(cache, 0, 0);
