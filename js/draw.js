@@ -2,10 +2,10 @@ var graph = null;
 var downX = -1, downY = -1;
 var mouseDown = false;
 var currentShape = 0;
-var shapes = ['线段', '圆'];
+var shapes = ['线段', '圆', '填充'];
 
 function drawShape(x1, y1, x2, y2, onCache = false) {
-  if (onCache) graph.restore();
+  if (onCache) graph.refresh();
   switch (currentShape) {
   case 0:
     if (onCache)
@@ -28,9 +28,18 @@ function drawShapeonCache(x1, y1, x2, y2) {
 }
 
 function onMouseDown(event) {
-  if (event.button != 0) return;
+  if (event.button != 0) {
+    downX = -1, downY = -1;
+    mouseDown = false;
+    graph.refresh();
+    return;
+  }
   if (mouseDown) {
     onMouseUp(event);
+    return;
+  }
+  if (currentShape == 2) {
+    graph.fill(event.offsetX, event.offsetY);
     return;
   }
   downX = event.offsetX, downY = event.offsetY;
@@ -38,7 +47,12 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-  if (event.button != 0) return;
+  if (event.button != 0) {
+    downX = -1, downY = -1;
+    mouseDown = false;
+    graph.refresh();
+    return;
+  }
   if (mouseDown) {
     drawShape(downX, downY, event.offsetX, event.offsetY);
   }
@@ -54,7 +68,7 @@ function onMouseMove(event) {
 }
 
 function setColor(color) {
-  let [r, g, b] = color.split("(")[1].split(")")[0].split(",");
+  let [r, g, b] = color.split("(")[1].split(")")[0].split(",").map((x) => parseInt(x.trim()));
   graph.setCurrentColor(r, g, b);
   $('#color-drop-menu .color-block').css('background-color', color);
 }
@@ -67,16 +81,17 @@ function setShape(shape) {
 function init() {
   let colorItems = $('#color-menu').children();
   for (let i = 0; i < colorItems.length; i++) {
-    $(colorItems[i]).click((e) => {
+    $(colorItems[i]).children('.color-block').click((e) => {
       setColor($(e.target).css('background-color'));
     });
   }
+  setColor('rgb(0,0,0)');
+  setShape(0);
 }
 
 $(document).ready(() => {
   graph = new Graph(document);
   init();
-  setColor('rgb(0,0,0)');
 
   $('#canvas').mousedown(onMouseDown);
   $('#canvas').mouseup(onMouseUp);
