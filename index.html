@@ -3,14 +3,84 @@
 
 <head>
   <meta charset="UTF-8">
-  <script src="jquery-3.1.1.min.js"></script>
-  <script src="graph.js"></script>
-  <script src="draw.js"></script>
+  <script src="lib/jquery-3.1.1.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/draw.js"></script>
+  <link href="lib/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
   <title>计算机图形学第一次作业</title>
 </head>
 
 <body>
   <div style="width:500px;margin:0 auto;">
+    <form class="form-horizontal" role="form">
+      <ul class="option-list">
+        <li class="option-list-item form-group">
+          <label class="control-label">形状:</label>
+          <div class="dropdown">
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" id="shape-drop-menu" data-toggle="dropdown">
+              线段 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="shape-drop-menu">
+              <li role="presentation">
+                <a role="menuitem" tabindex="-1" class="menu-item" onclick="setShape(0)">线段</a>
+              </li>
+              <li role="presentation">
+                <a role="menuitem" tabindex="-1" class="menu-item" onclick="setShape(1)">圆</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="option-list-item form-group">
+          <label class="control-label">颜色:</label>
+           <div class="dropdown">
+            <button type="button" class="color-btn btn btn-default btn-sm dropdown-toggle" id="color-drop-menu" data-toggle="dropdown">
+              <div class="color-block"></div>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="color-drop-menu" id="color-menu">
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#fff"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#fcc"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#f00"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#f70"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#ff0"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#0f0"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#0ff"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#00f"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#70f"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#f0f"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#777"></div>
+              </li>
+              <li role="presentation">
+                <div role="menuitem" tabindex="-1" class="menu-item color-block" style="background-color:#000"></div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </form>
     <canvas id="canvas" width="500" height="500" style="border:1px solid #000000;">
     </canvas>
   </div>

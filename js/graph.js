@@ -5,7 +5,7 @@ function Graph(document) {
   this.height = canvas.height;
   this.offsetX = canvas.offsetLeft + parseInt(canvas.style.borderBottomWidth);
   this.offsetY = canvas.offsetTop + parseInt(canvas.style.borderBottomWidth);
-  let imageData = null;
+  let imageData = ctx.getImageData(0, 0, this.width, this.height);
   let currentColor = [0, 0, 0, 255];
 
   this.getGraphXY = (x, y) => {
@@ -49,10 +49,6 @@ function Graph(document) {
   this.createCache = () => {
     imageData = ctx.getImageData(0, 0, this.width, this.height);
   }
-
-  // this.refresh = () => {
-  //   ctx.putImageData(cache, 0, 0);
-  // }
 
   this.restore = () => {
     ctx.putImageData(imageData, 0, 0);

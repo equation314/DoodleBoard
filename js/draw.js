@@ -1,6 +1,8 @@
 var graph = null;
 var downX = -1, downY = -1;
 var mouseDown = false;
+var currentShape = 0;
+var shapes = ['线段', '圆'];
 
 function onMouseDown(event) {
   downX = event.offsetX, downY = event.offsetY;
@@ -28,15 +30,30 @@ function onMouseMove(event) {
   }
 }
 
+function setColor(color) {
+  let [r, g, b] = color.split("(")[1].split(")")[0].split(",");
+  graph.setCurrentColor(r, g, b);
+  $('#color-drop-menu .color-block').css('background-color', color);
+}
+
+function setShape(shape) {
+  currentShape = shape;
+  $('#shape-drop-menu').html(`${shapes[shape]} <span class="caret"></span>`);
+}
+
+function init() {
+  let colorItems = $('#color-menu').children();
+  for (let i = 0; i < colorItems.length; i++) {
+    $(colorItems[i]).click((e) => {
+      setColor($(e.target).css('background-color'));
+    });
+  }
+}
+
 $(document).ready(() => {
   graph = new Graph(document);
-  graph.setCurrentColor(0, 255, 0);
-  for (let i = 0; i < 500; i++)
-    graph.setPixel(i, Math.round(i/2));
-
-  graph.drawLine(200, 200, 406, 192);
-
-  console.log('fuck');
+  init();
+  setColor('rgb(0,0,0)');
 
   $('#canvas').mousedown(onMouseDown);
   $('#canvas').mouseup(onMouseUp);
