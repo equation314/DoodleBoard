@@ -96,4 +96,8 @@ $(document).ready(() => {
   $('#canvas').mousedown(onMouseDown);
   $('#canvas').mouseup(onMouseUp);
   $('#canvas').mousemove(onMouseMove);
+  $('#smooth-checkbox').click(() => {
+    console.log($('#smooth-checkbox').prop('checked'));
+    graph.setSmooth($('#smooth-checkbox').prop('checked'));
+  });
 });

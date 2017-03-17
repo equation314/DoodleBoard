@@ -11,19 +11,26 @@ function Graph(document) {
   ctx.fillRect(0, 0, width, height);
   let imageData = ctx.getImageData(0, 0, width, height);
   let currentColor = [0, 0, 0, 255];
+  let smoothLine = false;
 
-  function inCanvas(x, y) {
-    return 0 <= x && x < width && 0 <= y && y < height;
+  function inCanvas(image, x, y) {
+    return 0 <= x && x < image.width && 0 <= y && y < image.height;
   }
 
   function colorToInt(color) {
     return (((((color[0] << 8) + color[1]) << 8) + color[2]) << 8) + color[3];
   }
 
-  function getColor(data, x, y) {
-    if (!inCanvas(x, y)) return 0;
-    let i = (y * width + x) * 4;
-    return (((((data[i] << 8) + data[i+1]) << 8) + data[i+2]) << 8) + data[i+3];
+  function getColorArray(image, x, y) {
+    if (!inCanvas(image, x, y)) return 0;
+    let i = (y * image.width + x) * 4;
+    return image.data.slice(i, i+4);
+  }
+
+  function getColor(image, x, y) {
+    if (!inCanvas(image, x, y)) return 0;
+    let i = (y * image.width + x) * 4;
+    return (((((image.data[i] << 8) + image.data[i+1]) << 8) + image.data[i+2]) << 8) + image.data[i+3];
   }
 
   /*this.setPixel = (x, y, r = currentColor[0],
@@ -39,26 +46,27 @@ function Graph(document) {
     ctx.putImageData(id, x, y);
   }*/
 
-  function setPixel(x, y, r = currentColor[0],
-                          g = currentColor[1],
-                          b = currentColor[2],
-                          a = currentColor[3]) {
-    if (!inCanvas(x, y)) return;
-    ctx.fillStyle = `rgba(${r},${g},${b},${a / 255.0})`;
-    ctx.fillRect(x, y, 1, 1);
-  }
+  // function setPixel(x, y, r = currentColor[0],
+  //                         g = currentColor[1],
+  //                         b = currentColor[2],
+  //                         a = currentColor[3]) {
+  //   if (!inCanvas(image, x, y)) return;
+  //   ctx.fillStyle = `rgba(${r},${g},${b},${a / 255.0})`;
+  //   ctx.fillRect(x, y, 1, 1);
+  // }
 
 
-  function setImagePixel(data, x, y, r = currentColor[0],
-                                     g = currentColor[1],
-                                     b = currentColor[2],
-                                     a = currentColor[3]) {
-    if (!inCanvas(x, y)) return;
-    let i = (y * width + x) * 4;
-    data[i] = r;
-    data[i+1] = g;
-    data[i+2] = b;
-    data[i+3] = a;
+  function setImagePixel(image, x, y, r = currentColor[0],
+                                      g = currentColor[1],
+                                      b = currentColor[2],
+                                      a = currentColor[3] / 255) {
+    if (!inCanvas(image, x, y)) return;
+    let i = (y * image.width + x) * 4;
+
+    image.data[i+0] = (1 - a) * image.data[i+0] + a * r;
+    image.data[i+1] = (1 - a) * image.data[i+1] + a * g;
+    image.data[i+2] = (1 - a) * image.data[i+2] + a * b;
+    image.data[i+3] = 255;
   }
 
   this.refresh = () => {
@@ -69,7 +77,11 @@ function Graph(document) {
     currentColor = [r, g, b, a];
   }
 
-  function __drawLine(x1, y1, x2, y2, data) {
+  this.setSmooth = (ok) => {
+    smoothLine = ok;
+  }
+
+  function __drawLine(x1, y1, x2, y2, image) {
     let dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1), t = 0;
     if (dx < dy) {
       t = x1; x1 = y1; y1 = t;
@@ -80,93 +92,135 @@ function Graph(document) {
     let x = x1, y = y1, e = -dx;
     let sgnx = x1 < x2 ? 1 : -1;
     let sgny = y1 < y2 ? 1 : -1;
-    if (!t) {
-      for (let i = 0; i <= dx; i++) {
-        setImagePixel(data, x, y);
-        x += sgnx;
-        e += 2 * dy;
-        if (e >= 0) {
-          y += sgny;
-          e -= 2 * dx;
+    let k = dy / dx *  sgny;
+
+    if (!smoothLine) {
+      if (!t) {
+        for (let i = 0; i <= dx; i++) {
+          setImagePixel(image, x, y);
+          x += sgnx;
+          e += 2 * dy;
+          if (e >= 0) {
+            y += sgny;
+            e -= 2 * dx;
+          }
+        }
+      } else {
+        for (let i = 0; i <= dx; i++) {
+          setImagePixel(image, y, x);
+          x += sgnx;
+          e += 2 * dy;
+          if (e >= 0) {
+            y += sgny;
+            e -= 2 * dx;
+          }
         }
       }
     } else {
-      for (let i = 0; i <= dx; i++) {
-        setImagePixel(data, y, x);
-        x += sgnx;
-        e += 2 * dy;
-        if (e >= 0) {
-          y += sgny;
-          e -= 2 * dx;
+      if (sgny == -1) y++;
+      if (!t) {
+        for (let i = 0; i <= dx; i++) {
+          let a = Math.floor(y);
+          let b = y - a;
+          if (sgny == -1) b = 1 - b;
+          setImagePixel(image, x, a, currentColor[0], currentColor[1], currentColor[2], 1 - b);
+          setImagePixel(image, x, a + sgny, currentColor[0], currentColor[1], currentColor[2], b);
+          x += sgnx;
+          y += k;
+        }
+      } else {
+        for (let i = 0; i <= dx; i++) {
+          let a = Math.floor(y);
+          let b = y - a;
+          if (sgny == -1) b = 1 - b;
+          setImagePixel(image, a, x, currentColor[0], currentColor[1], currentColor[2], 1 - b);
+          setImagePixel(image, a + sgny, x, currentColor[0], currentColor[1], currentColor[2], b);
+          x += sgnx;
+          y += k;
         }
       }
     }
   }
 
-  function __drawCircle(x, y, r, data) {
-    function drawCirclePoints(dx, dy) {
-      setImagePixel(data, x + dx, y + dy); setImagePixel(data, x + dy, y + dx);
-      setImagePixel(data, x - dx, y + dy); setImagePixel(data, x + dy, y - dx);
-      setImagePixel(data, x + dx, y - dy); setImagePixel(data, x - dy, y + dx);
-      setImagePixel(data, x - dx, y - dy); setImagePixel(data, x - dy, y - dx);
+  function __drawCircle(x, y, r, image) {
+    function drawCirclePoints(dx, dy, r = currentColor[0],
+                                      g = currentColor[1],
+                                      b = currentColor[2],
+                                      a = currentColor[3] / 256) {
+      setImagePixel(image, x + dx, y + dy, r, g, b, a); setImagePixel(image, x + dy, y + dx, r, g, b, a);
+      setImagePixel(image, x - dx, y + dy, r, g, b, a); setImagePixel(image, x + dy, y - dx, r, g, b, a);
+      setImagePixel(image, x + dx, y - dy, r, g, b, a); setImagePixel(image, x - dy, y + dx, r, g, b, a);
+      setImagePixel(image, x - dx, y - dy, r, g, b, a); setImagePixel(image, x - dy, y - dx, r, g, b, a);
     }
 
-    let dx = 0, dy = r, d= 10 - r * 8;
-    while (dx <= dy) {
-      drawCirclePoints(dx, dy);
-      if (d < 0)
-        d += (dx << 4) + 24;
-      else {
-        d += ((dx - dy) << 4) + 40;
-        dy--;
+    let dx = 0, dy = r, d = 10 - r * 8;
+    if (!smoothLine) {
+      while (dx <= dy) {
+        drawCirclePoints(dx, dy);
+        if (d < 0)
+          d += (dx << 4) + 24;
+        else {
+          d += ((dx - dy) << 4) + 40;
+          dy--;
+        }
+        dx++;
       }
-      dx++;
+    } else {
+      while (dx <= dy) {
+        let y = Math.sqrt(r * r - dx * dx);
+        let a = Math.floor(y);
+        let b = y - a;
+        drawCirclePoints(dx, a, currentColor[0], currentColor[1], currentColor[2], b);
+        if (a) drawCirclePoints(dx, a - 1, currentColor[0], currentColor[1], currentColor[2], 1 - b);
+        dx++;
+        dy = y;
+      }
     }
   }
 
   this.drawLine = (x1, y1, x2, y2) => {
-    __drawLine(x1, y1, x2, y2, imageData.data);
+    __drawLine(x1, y1, x2, y2, imageData);
     this.refresh();
   }
 
   this.drawLineOnCache = (x1, y1, x2, y2) => {
     let cache = ctx.getImageData(0, 0, width, height);
-    __drawLine(x1, y1, x2, y2, cache.data);
+    __drawLine(x1, y1, x2, y2, cache);
     ctx.putImageData(cache, 0, 0);
   }
 
   this.drawCircle = (x, y, r) => {
-    __drawCircle(x, y, r, imageData.data);
+    __drawCircle(x, y, r, imageData);
     this.refresh();
   }
 
   this.drawCircleOnCache = (x, y, r) => {
     let cache = ctx.getImageData(0, 0, width, height);
-    __drawCircle(x, y, r, cache.data);
+    __drawCircle(x, y, r, cache);
     ctx.putImageData(cache, 0, 0);
   }
 
   this.fill = (x, y) => {
-    let color = getColor(imageData.data, x, y);
+    let color = getColor(imageData, x, y);
     let stack = [{ x:x, y:y }];
     if (color == colorToInt(currentColor)) return;
     while (stack.length) {
       let p = stack.pop();
       let xl = p.x, xr = p.x, y = p.y;
-      setImagePixel(imageData.data, xl, y);
-      while (getColor(imageData.data, xl - 1, y) == color)
-        setImagePixel(imageData.data, --xl, y);
-      while (getColor(imageData.data, xr + 1, y) == color)
-        setImagePixel(imageData.data, ++xr, y);
+      setImagePixel(imageData, xl, y);
+      while (getColor(imageData, xl - 1, y) == color)
+        setImagePixel(imageData, --xl, y);
+      while (getColor(imageData, xr + 1, y) == color)
+        setImagePixel(imageData, ++xr, y);
 
       for (let t = 0; t < 2; t++) {
         y = !t ? p.y + 1 : p.y - 1;
         if (y < 0 || y >= height) continue;
         for (let x = xl; x <= xr; x++) {
-          for (;x <= xr && getColor(imageData.data, x, y) != color; x++);
-          if (x <= xr && getColor(imageData.data, x, y) == color)
+          for (;x <= xr && getColor(imageData, x, y) != color; x++);
+          if (x <= xr && getColor(imageData, x, y) == color)
             stack.push({ x:x, y:y });
-          for (;x <= xr && getColor(imageData.data, x, y) == color; x++);
+          for (;x <= xr && getColor(imageData, x, y) == color; x++);
         }
       }
     }
