@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link href="css/github.css" rel="stylesheet">
+  <title>计算机图形学第一次作业报告</title>
+</head>
+
+<body style="padding:40px">
+  
+<article class="markdown-body entry-content" itemprop="text"><h1><a id="user-content-计算机图形学第一次作业报告" class="anchor" href="#计算机图形学第一次作业报告" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>计算机图形学第一次作业报告</h1>
+<h2><a id="user-content-简介" class="anchor" href="#简介" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>简介</h2>
+<p>这次作业，我是用 HTML + JavaScript 完成的，其中 HTML 主要用来快速制作图形界面，JavaScript 用来实现光栅化算法。我实现的光栅化算法包括：</p>
+<ol>
+<li>画线</li>
+<li>画圆</li>
+<li>区域填充</li>
+<li>线条反走样</li>
+</ol>
+<h2><a id="user-content-功能介绍" class="anchor" href="#功能介绍" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>功能介绍</h2>
+<p>如图所示，整个项目的主界面是个网页，使用任意一款现代浏览器打开 <a href="index.html"><code>index.html</code></a> 就可以运行。</p>
+<p><a href="img/1.png" target="_blank"><img src="img/1.png" alt="界面" title="界面" style="max-width:100%;"></a></p>
+<p>点击“<strong>形状</strong>”下拉菜单可以选择形状，可用的三种形状分别为“<strong>线段</strong>”、“<strong>圆</strong>”和“<strong>填充</strong>”，分别对应画线段、画圆和区域填充功能：</p>
+<ul>
+<li>鼠标点击正方形区域中某点固定其中一端点，再点击另一点确定另一端点，即可画线段；</li>
+<li>鼠标点击正方形区域中某点固定圆心，再点击另一点确定圆上的某点，即可画圆；</li>
+<li>鼠标点击正方形区域中某点，即可把与该点同色的四连通的所有点都填充为当前颜色。</li>
+</ul>
+<p>点击“<strong>颜色</strong>”下拉菜单可以选择形状的颜色，当形状为“线段”或“圆”时，将以该颜色画线或圆周；当形状为“填充”时，将以该颜色进行填充。</p>
+<p>点击“<strong>平滑线条</strong>”复选框可以打开或关闭平滑线条功能，当打开该功能时，将会用反走样算法来画线；当关闭该功能时，将会用普通算法来画线。</p>
+<h2><a id="user-content-项目结构" class="anchor" href="#项目结构" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>项目结构</h2>
+<p>整个项目的文件结构如下图所示：</p>
+<pre><code>DoodleBoard/
+├── lib/                        // 外部库
+│   ├─── jquery-3.1.1.min.js
+│   ├─── bootstrap.min.js
+│   └─── bootstrap.min.css
+├── js/
+│   ├─── graph.js               // Graph 类
+│   └─── draw.js                // 主程序
+├── css/
+│   └─── style.css              // 样式
+├── img/                        // 本报告引用的图片
+├── index.html                  // 主界面网页文件
+├── report.md                   // 本报告
+└── README.md                   // Github Readme 文件
+</code></pre>
+<p>项目的核心代码位于 <a href="js/graph.js"><strong><code>graph.js</code></strong></a> 和 <a href="js/draw.js"><strong><code>draw.js</code></strong></a>  中，其中 <a href="js/graph.js"><code>graph.js</code></a> 实现了一个简单的图形类 Graph，并实现了各种光栅化算法。<a href="js/draw.js"><code>draw.js</code></a> 包含了对各种事件的处理，以及通过调用 Graph 中的函数来绘制图形。</p>
+<h2><a id="user-content-界面" class="anchor" href="#界面" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>界面</h2>
+<p>界面部分主要用 HTML 实现，并使用了 <a href="http://jquery.com/">jQurey</a> 和 <a href="http://getbootstrap.com/">Bootstrap</a> 库，使得开发过程更为方便、快捷。</p>
+<p>本项目核心——画图板，是用 HTML5 的 <strong><code>&lt;canvas&gt;</code> 元素</strong>结合 JavaScript 来实现的。Canvas 中自带了部分画线、画圆的函数，本项目并没有用到，而是使用 <code>Context.getImageData()</code> 和 <code>Context.putImageData()</code> 函数，先获取从当前 Canvas 导出的图像数据，然后对该图像进行像素操作，最后再放到 Canvas 上。</p>
+<p>画图过程中一些鼠标事件的处理用的是 <a href="http://jquery.com/">jQurey</a>。</p>
+<h2><a id="user-content-算法" class="anchor" href="#算法" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>算法</h2>
+<p>本项目并没有用到 Canvas 中自带的画线、画圆函数，所有光栅化算法匀重新实现。</p>
+<h3><a id="user-content-画线" class="anchor" href="#画线" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>画线</h3>
+<p>画线用的是书中 <strong>Bresenham 算法</strong>，实现在 <a href="js/graph.js"><code>graph.js</code></a> 中的 <code>__drawLine()</code> 函数，具体细节不再描述。(书中给出的代码只能画 <code>0 &lt;= k &lt;= 1</code> 的线，对于其他情况需进行讨论)</p>
+<h3><a id="user-content-画圆" class="anchor" href="#画圆" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>画圆</h3>
+<p>画圆用的是书中的<strong>中点画圆算法</strong>，实现在 <a href="js/graph.js"><code>graph.js</code></a> 中的 <code>__drawCircle()</code> 函数，具体细节不再描述。</p>
+<h3><a id="user-content-区域填充" class="anchor" href="#区域填充" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>区域填充</h3>
+<p>区域填充用的是书中的<strong>扫描线区域填充算法</strong>，实现在 <a href="js/graph.js"><code>graph.js</code></a> 中的 <code>fill()</code> 函数，具体细节不再描述。</p>
+<h3><a id="user-content-反走样" class="anchor" href="#反走样" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>反走样</h3>
+<p>线条的反走样用的是<a href="https://en.wikipedia.org/wiki/Xiaolin_Wu%27s_line_algorithm"><strong>吴小林直线算法</strong></a>，能够又快又好地处理线段和圆弧的反走样。没有经过反走样和经过反走样的线段和圆的比较如下图所示：</p>
+<p><a href="img/2.png" target="_blank"><img src="img/2.png" alt="反走样效果图" title="反走样效果图" style="max-width:100%;"></a></p>
+<p>该算法从中点画线算法改进而来。普通的中点画线算法处理当前横坐标时，是通过比较当前纵坐标的小数部分与 <code>0.5</code> 的大小，来决定是在 <code>(x, floor(y))</code> 还是 <code>(x, floor(y) + 1)</code> 画点，而吴小林算法，是两个点都要画，只是亮度不同。</p>
+<p>设当前纵坐标 <code>y</code> 的整数部分为 <code>a = floor(y)</code>， 小数部分为 <code>b = y - a</code>，则 <code>(x, a)</code> 与 <code>(x, a + 1)</code> 这两个点的亮度之比为 <code>1 - b : b</code>。具体画点时，可通过设置像素的 Alpha 通道(透明度)来设置亮度。</p>
+<p>对于画圆也类似，都是根据当前纵坐标的小数部分决定两个点的亮度。</p>
+<p>对于该算法的效率，由于需要用到纵坐标的小数部分，实数操作不可避免，无法像 Bresenham 算法一样全通过整数操作完成，但是由于算法简洁，效率差别不是很明显。</p>
+<p>对于其他反走样算法(SSAA，加权区域采样)，我也实现过，但是效率和质量均没有吴小林算法好。</p>
+<h3><a id="user-content-相交线的反走样" class="anchor" href="#相交线的反走样" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>相交线的反走样</h3>
+<p>如果直接用上述算法进行反走样，对于相交线段(或线段与圆，圆与圆)，由于画线时某些点亮度会很高，当覆盖前一条的线段的像素时，就有可能会出现像是线条“断开”的情况，如下图所示：</p>
+<p><a href="img/3.png" target="_blank"><img src="img/3.png" alt="“断开”的线段" title="“断开”的线段" style="max-width:100%;"></a></p>
+<p>为了解决这个问题，需要用到<strong>颜色混合</strong>的相关知识，基本思想为：当一个像素即将覆盖另一个像素时，不直接覆盖，而是把该点颜色设为这两个像素点的混合色。</p>
+<p>具体算法为：设屏幕上已存在的点为 A，其 RGB 值分别为 <code>r(A), g(A), b(A)</code>，将要覆盖上去的点为 B，其 RGB 值分别为 <code>r(B), g(B), b(B)</code>，Alpha 通道值为 <code>a</code> (0~1)，则两点混合后的产生的新点 C 的 RGB 值分别为</p>
+<pre><code>r(C) = (1 - a) * r(B) + a * r(A)
+g(C) = (1 - a) * g(B) + a * g(A)
+b(C) = (1 - a) * b(B) + a * b(A)
+</code></pre>
+<p>使用了颜色混合后，上面两条线段相交的情况如下图所示：</p>
+<p><a href="img/4.png" target="_blank"><img src="img/4.png" alt="使用颜色混合后相交的线段" title="使用颜色混合后相交的线段" style="max-width:100%;"></a></p>
+</article>
+
+</body>
+
+</html>

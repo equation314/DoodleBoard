@@ -32,11 +32,11 @@ DoodleBoard/
 ├── js/
 │   ├─── graph.js               // Graph 类
 │   └─── draw.js                // 主程序
-├── css/
-│   └─── style.css              // 样式
+├── css/                        // 样式
 ├── img/                        // 本报告引用的图片
 ├── index.html                  // 主界面网页文件
-├── report.md                   // 本报告
+├── report.html                 // HTML 格式的报告
+├── report.md                   // Markdown 格式的报告
 └── README.md                   // Github Readme 文件
 ```
 项目的核心代码位于 [**`graph.js`**][graph.js] 和 [**`draw.js`**][draw.js]  中，其中 [`graph.js`][graph.js] 实现了一个简单的图形类 Graph，并实现了各种光栅化算法。[`draw.js`][draw.js] 包含了对各种事件的处理，以及通过调用 Graph 中的函数来绘制图形。
